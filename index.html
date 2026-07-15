@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoga by Victoria Silacheva · LAGOON 500</title>
+
+  <!-- Google Fonts: Cormorant Garamond (luxury display), Playfair Display, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES
+    ============================================= */
+    :root {
+      --sand:    #FAF7F2;
+      --white:   #FFFFFF;
+      --navy:    #1A2A3A;
+      --gray:    #4A4A4A;
+      --gold:    #C9A96E;
+      --gold-lt: #E2C99A;
+      --teal:    #3A9B9B;
+      --line:    rgba(201,169,110,.25);
+
+      --font-luxury: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+      --font-serif:  'Playfair Display', Georgia, serif;
+      --font-sans:   'Inter', sans-serif;
+
+      --ease: cubic-bezier(.25,.6,.25,1);
+      --radius: 4px;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; font-size: 16px; }
+    body {
+      background: var(--sand);
+      color: var(--navy);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    ::selection { background: rgba(201,169,110,.28); color: var(--navy); }
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+
+    /* =============================================
+       ANIMATIONS
+    ============================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+    @keyframes kenBurns {
+      from { transform: scale(1.06); }
+      to   { transform: scale(1.0);  }
+    }
+    @keyframes scrollDrip {
+      0%   { transform: scaleY(0); transform-origin: top; }
+      45%  { transform: scaleY(1); transform-origin: top; }
+      55%  { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* Scroll-reveal utility */
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: .15s; }
+    .reveal-delay-2 { transition-delay: .30s; }
+    .reveal-delay-3 { transition-delay: .45s; }
+    .reveal-delay-4 { transition-delay: .60s; }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 3rem;
+      transition: background .4s, padding .4s;
+    }
+    nav.scrolled {
+      background: rgba(250,247,242,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 1rem 3rem;
+      box-shadow: 0 1px 20px rgba(26,42,58,.06);
+    }
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-style: italic;
+      letter-spacing: .08em;
+      color: var(--white);
+      transition: color .4s;
+    }
+    nav.scrolled .nav-logo { color: var(--navy); }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-size: .78rem;
+      font-weight: 400;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.85);
+      transition: color .3s;
+      position: relative;
+      padding-bottom: .2rem;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%; height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s var(--ease);
+    }
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    nav.scrolled .nav-links a { color: var(--gray); }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* =============================================
+       HERO — FIX: static bg (no JS parallax), Ken Burns via CSS only
+    ============================================= */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* FIX #9: bg is a fixed <img> tag instead of background-image to avoid parallax drift.
+       The img is absolutely positioned, oversize, centered — no JS transform needed. */
+    .hero-bg {
+      position: absolute;
+      inset: -5%;           /* extra room so Ken Burns scale doesn't reveal edges */
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+      animation: kenBurns 10s var(--ease) both;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,22,40,.36) 0%,
+        rgba(10,22,40,.18) 50%,
+        rgba(10,22,40,.58) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: var(--white);
+      animation: fadeIn 1.4s var(--ease) both;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-sans);
+      font-size: .72rem;
+      font-weight: 400;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 1.2rem;
+      animation: fadeUp .9s .3s var(--ease) both;
+    }
+
+    /* FIX #7: premium Cormorant Garamond, ultra-thin italic */
+    .hero-title {
+      font-family: var(--font-luxury);
+      font-size: clamp(6rem, 16vw, 14rem);
+      font-weight: 300;
+      font-style: normal;
+      letter-spacing: .22em;
+      line-height: .88;
+      text-shadow: 0 6px 60px rgba(0,0,0,.3);
+      animation: fadeUp 1.1s .1s var(--ease) both;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-sans);
+      font-size: clamp(.72rem, 1.8vw, .95rem);
+      font-weight: 300;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      margin-top: .9rem;
+      color: rgba(255,255,255,.88);
+      animation: fadeUp .9s .5s var(--ease) both;
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 2rem auto;
+      animation: fadeIn 1s .7s var(--ease) both;
+    }
+
+    /* FIX #6: btn-gold — only fadeUp entry animation. Glow is a static box-shadow,
+       no goldGlow keyframe that causes jitter. Shimmer lives on ::before only. */
+    .btn-gold {
+      display: inline-block;
+      padding: .95rem 2.8rem;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: .78rem;
+      font-weight: 400;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 22px rgba(201,169,110,.35);
+      /* Single animation — only entry. No looping goldGlow here. */
+      animation: fadeUp .9s .9s var(--ease) both;
+      transition: background .35s var(--ease), color .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    /* Shimmer sweep on a separate layer — won't interfere with hover */
+    .btn-gold::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.14) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s 1.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .btn-gold:hover {
+      background: var(--gold);
+      color: var(--navy);
+      box-shadow: 0 8px 30px rgba(201,169,110,.6);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      color: rgba(255,255,255,.6);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      animation: fadeIn 1s 1.6s var(--ease) both;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.6), transparent);
+      animation: scrollDrip 2.6s var(--ease) 2.4s infinite;
+    }
+
+    /* =============================================
+       SECTION SHARED
+    ============================================= */
+    section { padding: 6rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      font-size: .68rem;
+      font-weight: 400;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--navy);
+    }
+    .section-title em { font-style: italic; color: var(--teal); }
+    .section-line {
+      width: 56px;
+      height: 1.5px;
+      background: var(--gold);
+      margin: 1.6rem 0 2.4rem;
+      transform-origin: left;
+    }
+    .section-line.visible { animation: lineGrow .7s var(--ease) both; }
+
+    /* =============================================
+       BLOCK 2 — YACHT OVERVIEW
+    ============================================= */
+    #overview { background: var(--white); }
+
+    .overview-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    .overview-desc {
+      max-width: 420px;
+      font-size: .95rem;
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .card {
+      background: var(--sand);
+      position: relative;
+      overflow: hidden;
+      transition: transform .4s var(--ease), box-shadow .4s;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s var(--ease);
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(26,42,58,.08); }
+    .card:hover::after { transform: scaleX(1); }
+
+    .card-photo {
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+    .card-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform .6s var(--ease);
+    }
+    .card:hover .card-photo img { transform: scale(1.06); }
+
+    .card-body { padding: 2.4rem 2.4rem 2.8rem; }
+
+    .card-num {
+      font-family: var(--font-serif);
+      font-size: 3.6rem;
+      font-weight: 400;
+      color: rgba(201,169,110,.18);
+      line-height: 1;
+      margin-bottom: .6rem;
+      transition: color .5s var(--ease);
+    }
+    .card:hover .card-num { color: rgba(201,169,110,.45); }
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: .8rem;
+    }
+    .card-desc {
+      font-size: .88rem;
+      color: var(--gray);
+      line-height: 1.75;
+    }
+
+    /* =============================================
+       BLOCK 3 — LAGOON 500
+    ============================================= */
+    #lagoon { background: var(--sand); }
+
+    .lagoon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .lagoon-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-top: 1rem;
+    }
+    .lagoon-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      font-size: .92rem;
+      color: var(--gray);
+    }
+    .lagoon-list li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: .55rem;
+    }
+
+    .lagoon-photo {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+    .lagoon-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      transition: transform 6s var(--ease);
+    }
+    .lagoon-photo:hover img { transform: scale(1.04); }
+    .lagoon-photo-badge {
+      position: absolute;
+      bottom: 1.8rem; left: 1.8rem;
+      background: rgba(250,247,242,.92);
+      backdrop-filter: blur(8px);
+      padding: .9rem 1.4rem;
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      border-left: 2px solid var(--gold);
+      transition: padding-left .4s var(--ease);
+    }
+    .lagoon-photo:hover .lagoon-photo-badge { padding-left: 1.7rem; }
+
+    /* =============================================
+       SUP YOGA SECTION
+    ============================================= */
+    #sup {
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+    }
+    .sup-bg {
+      position: absolute;
+      inset: 0;
+    }
+    .sup-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+    .sup-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(10,22,40,.78) 0%,
+        rgba(10,22,40,.45) 55%,
+        rgba(10,22,40,.15) 100%
+      );
+    }
+    .sup-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      color: var(--white);
+    }
+    .sup-tag {
+      font-size: .68rem;
+      letter-spacing: .32em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 1.2rem;
+    }
+    .sup-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.15;
+      margin-bottom: 1.6rem;
+    }
+    .sup-line {
+      width: 56px; height: 1.5px;
+      background: var(--gold);
+      margin-bottom: 2rem;
+    }
+    .sup-desc {
+      font-size: .97rem;
+      color: rgba(255,255,255,.82);
+      line-height: 1.85;
+      max-width: 480px;
+      margin-bottom: 2.4rem;
+    }
+    .sup-details {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+    .sup-detail {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      font-size: .88rem;
+      color: rgba(255,255,255,.72);
+    }
+    .sup-detail-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .sup-detail strong {
+      color: var(--gold-lt);
+      font-weight: 400;
+    }
+
+    /* =============================================
+       BLOCK 4 — FOOD & ATMOSPHERE
+    ============================================= */
+    #food {
+      background: var(--navy);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    #food::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(58,155,155,.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #food .section-title { color: var(--white); }
+    #food .section-tag   { color: var(--gold); }
+
+    /* Food with kitchen photo on the right */
+    .food-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 3.5rem;
+    }
+    .food-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .food-item {
+      display: flex;
+      gap: 1.6rem;
+      align-items: flex-start;
+      padding: 1.8rem 2rem;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 2px;
+      transition: border-color .3s, background .3s;
+    }
+    .food-item:hover {
+      border-color: rgba(201,169,110,.3);
+      background: rgba(201,169,110,.04);
+    }
+    .food-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      margin-top: .1rem;
+      transition: transform .45s var(--ease);
+    }
+    .food-item:hover .food-icon { transform: translateY(-3px); }
+    .food-title {
+      font-family: var(--font-serif);
+      font-size: 1.08rem;
+      font-weight: 400;
+      margin-bottom: .35rem;
+      color: var(--white);
+    }
+    .food-desc {
+      font-size: .86rem;
+      color: rgba(255,255,255,.55);
+      line-height: 1.7;
+    }
+
+    .food-photo {
+      position: sticky;
+      top: 7rem;
+    }
+    .food-photo-wrap {
+      overflow: hidden;
+      border-radius: 2px;
+      aspect-ratio: 3/4;
+    }
+    .food-photo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 6s var(--ease);
+    }
+    .food-photo-wrap:hover img { transform: scale(1.04); }
+    .food-photo-caption {
+      margin-top: 1rem;
+      font-size: .7rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+    }
+
+    /* =============================================
+       BLOCK 5 — FORM
+    ============================================= */
+    #signup {
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    #signup::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal));
+      background-size: 200% 100%;
+      animation: shimmer 4s linear infinite;
+    }
+    #signup::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 80%, rgba(58,155,155,.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 20%, rgba(201,169,110,.07) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .form-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .form-wrap .section-title { text-align: center; }
+    .form-wrap .section-tag  { text-align: center; }
+    .form-wrap .section-line { margin-left: auto; margin-right: auto; }
+
+    .form-note {
+      text-align: center;
+      font-size: .72rem;
+      font-weight: 400;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 2.8rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    .form-field { display: flex; flex-direction: column; gap: .45rem; }
+    .form-field label {
+      font-size: .7rem;
+      font-weight: 400;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+    .form-field input,
+    .form-field textarea {
+      background: var(--sand);
+      border: 1.5px solid transparent;
+      border-bottom-color: var(--line);
+      border-radius: 0;
+      padding: .85rem 1rem;
+      font-family: var(--font-sans);
+      font-size: .92rem;
+      font-weight: 300;
+      color: var(--navy);
+      outline: none;
+      transition: border-color .3s, background .3s;
+      width: 100%;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: var(--gold);
+      background: var(--white);
+    }
+    .form-field textarea { resize: vertical; min-height: 110px; }
+
+    .form-submit { text-align: center; margin-top: .6rem; }
+    .btn-submit {
+      display: inline-block;
+      padding: 1.05rem 3.5rem;
+      background: var(--gold);
+      color: var(--white);
+      border: none;
+      font-family: var(--font-sans);
+      font-size: .78rem;
+      font-weight: 400;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: background .35s, box-shadow .35s, transform .2s;
+    }
+    .btn-submit:hover {
+      background: #b8935a;
+      box-shadow: 0 10px 30px rgba(201,169,110,.45);
+      transform: translateY(-2px);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 1.4rem 2rem;
+      background: rgba(58,155,155,.08);
+      border: 1px solid rgba(58,155,155,.3);
+      color: var(--teal);
+      font-size: .9rem;
+      letter-spacing: .06em;
+      margin-top: 1.2rem;
+      border-radius: var(--radius);
+    }
+    .form-success.visible { display: block; animation: fadeIn .5s var(--ease); }
+
+    ._hp { display: none !important; }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.45);
+      padding: 3.5rem 2rem;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: .14em;
+      color: var(--white);
+      margin-bottom: .4rem;
+      position: relative;
+      display: inline-block;
+    }
+    .footer-logo::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 1.5px;
+      background: var(--gold);
+    }
+    .footer-tagline {
+      font-size: .72rem;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      margin-top: 1.2rem;
+    }
+    .footer-copy {
+      font-size: .72rem;
+      letter-spacing: .1em;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 2rem;
+    }
+    .footer-initials {
+      font-family: var(--font-serif);
+      font-size: .68rem;
+      letter-spacing: .4em;
+      margin-top: 1.4rem;
+      color: rgba(255,255,255,.10);
+      transition: color .6s var(--ease);
+    }
+    .footer-initials:hover { color: rgba(201,169,110,.4); }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 1024px) {
+      .food-layout { grid-template-columns: 1fr; }
+      .food-photo { position: static; }
+      .food-photo-wrap { aspect-ratio: 16/9; max-height: 360px; }
+    }
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.6rem; }
+      nav.scrolled { padding: .9rem 1.6rem; }
+      .nav-links { display: none; }
+      section { padding: 4.5rem 1.4rem; }
+      .overview-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .cards-row { grid-template-columns: 1fr; gap: 2px; }
+      .lagoon-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .lagoon-photo { aspect-ratio: 3/2; order: -1; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: clamp(4.5rem, 20vw, 8rem); }
+      .sup-content { padding: 4rem 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <span class="nav-logo">Victoria Silacheva</span>
+  <ul class="nav-links">
+    <li><a href="#overview">Яхта</a></li>
+    <li><a href="#lagoon">LAGOON 500</a></li>
+    <li><a href="#sup">SUP Yoga</a></li>
+    <li><a href="#food">Гастрономия</a></li>
+    <li><a href="#signup">Записаться</a></li>
+  </ul>
+</nav>
+
+<!-- =============================================
+     BLOCK 1: HERO
+     REPLACE: swap hero.png with your own photo
+============================================= -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <img src="hero.png" alt="Катамаран LAGOON 500" />
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">LAGOON 500 · Yoga Experience</p>
+    <h1 class="hero-title">YOGA</h1>
+    <p class="hero-subtitle">by Victoria Silacheva</p>
+    <div class="hero-divider"></div>
+    <a href="#signup" class="btn-gold">Записаться на мероприятие</a>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- =============================================
+     BLOCK 2: YACHT OVERVIEW
+============================================= -->
+<section id="overview">
+  <div class="section-inner">
+
+    <div class="overview-header">
+      <div>
+        <p class="section-tag reveal">Обзор яхты</p>
+        <h2 class="section-title reveal reveal-delay-1">
+          Пространство <em>свободы</em><br>и гармонии
+        </h2>
+        <div class="section-line reveal reveal-delay-2"></div>
+      </div>
+      <p class="overview-desc reveal reveal-delay-2">
+        Катамаран LAGOON 500 — плавучий retreat-центр. Широкие палубы,
+        открытое небо и бесконечная вода создают идеальное пространство
+        для практики и глубокого восстановления.
+      </p>
+    </div>
+
+    <div class="cards-row">
+
+      <div class="card reveal reveal-delay-1">
+        <!-- No cabin-specific photo — decorative placeholder -->
+        <div class="card-body">
+          <div class="card-num">01</div>
+          <h3 class="card-title">4 спальни</h3>
+          <p class="card-desc">
+            Четыре уютные каюты с двухместным размещением. Мягкое постельное бельё,
+            индивидуальный климат-контроль, панорамные иллюминаторы с видом на море.
+          </p>
+        </div>
+      </div>
+
+      <div class="card reveal reveal-delay-2">
+        <div class="card-photo">
+          <img src="interior.png" alt="Столовая зона LAGOON 500" />
+        </div>
+        <div class="card-body">
+          <div class="card-num">02</div>
+          <h3 class="card-title">Столовая зона</h3>
+          <p class="card-desc">
+            Просторная обеденная зона с панорамными окнами. Совместные завтраки,
+            ужины и чайные церемонии на фоне морского горизонта.
+          </p>
+        </div>
+      </div>
+
+      <div class="card reveal reveal-delay-3">
+        <div class="card-photo">
+          <img src="lounge.png" alt="Lounge-зона на корме" />
+        </div>
+        <div class="card-body">
+          <div class="card-num">03</div>
+          <h3 class="card-title">Lounge на корме</h3>
+          <p class="card-desc">
+            Открытая lounge-зона на корме — лучшее место для медитации,
+            встречи рассвета или вечернего созерцания заката на воде.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     BLOCK 3: LAGOON 500 AMENITIES
+============================================= -->
+<section id="lagoon">
+  <div class="section-inner">
+    <div class="lagoon-grid">
+
+      <div>
+        <p class="section-tag reveal">Удобства на борту</p>
+        <h2 class="section-title reveal reveal-delay-1">LAGOON 500</h2>
+        <div class="section-line reveal reveal-delay-2"></div>
+
+        <ul class="lagoon-list reveal reveal-delay-2">
+          <li>Полный комплект посуды и столовых приборов</li>
+          <li>Микроволновка, газовая печь, духовка</li>
+          <li>Встроенные холодильники</li>
+          <li>Кондиционирование — подогрев и охлаждение</li>
+          <li>Монитор для демонстрации экрана ноутбука</li>
+          <li>Премиальная аудиосистема</li>
+          <li>Уютные пледы и текстиль</li>
+        </ul>
+      </div>
+
+      <div>
+        <!-- REPLACE: catamaran aerial photo -->
+        <div class="lagoon-photo reveal reveal-delay-2">
+          <img src="catamaran.png" alt="LAGOON 500 с воздуха" />
+          <div class="lagoon-photo-badge">LAGOON 500</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     SUP YOGA SECTION
+     REPLACE: yoga.png with your own SUP yoga photo
+============================================= -->
+<section id="sup">
+  <div class="sup-bg">
+    <img src="yoga.png" alt="Йога на сапах" />
+  </div>
+  <div class="sup-overlay"></div>
+
+  <div class="sup-content">
+    <p class="sup-tag reveal">Активность дня</p>
+    <h2 class="sup-title reveal reveal-delay-1">Йога<br>на сапах</h2>
+    <div class="sup-line reveal reveal-delay-2"></div>
+    <p class="sup-desc reveal reveal-delay-2">
+      Полный день на воде: практика йоги на сап-досках, медитация, плавание
+      и отдых под руководством Виктории Силачевой.
+    </p>
+    <div class="sup-details reveal reveal-delay-3">
+      <div class="sup-detail">
+        <span class="sup-detail-icon">🕙</span>
+        <span>Выход на яхте <strong>8 часов</strong> · с 10:00 до 18:00</span>
+      </div>
+      <div class="sup-detail">
+        <span class="sup-detail-icon">📍</span>
+        <span>Сбор в <strong>9:30</strong> по адресу: <strong>ул. Босфора, 3</strong></span>
+      </div>
+      <div class="sup-detail">
+        <span class="sup-detail-icon">🧘</span>
+        <span>Все уровни подготовки</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     BLOCK 4: FOOD & ATMOSPHERE
+============================================= -->
+<section id="food">
+  <div class="section-inner">
+    <p class="section-tag reveal">Гастрономия &amp; атмосфера</p>
+    <h2 class="section-title reveal reveal-delay-1">
+      Вкус <em style="color:var(--gold-lt);">моря</em>
+    </h2>
+    <div class="section-line reveal reveal-delay-2" style="background:rgba(201,169,110,.5)"></div>
+
+    <div class="food-layout">
+      <div class="food-grid">
+
+        <div class="food-item reveal reveal-delay-1">
+          <span class="food-icon">🦪</span>
+          <div>
+            <h3 class="food-title">Свежие морепродукты</h3>
+            <p class="food-desc">
+              Прямо со дна — живые морепродукты, только что поднятые из моря.
+              Морские ежи, гребешки, мидии в их первозданном виде.
+            </p>
+          </div>
+        </div>
+
+        <div class="food-item reveal reveal-delay-2">
+          <span class="food-icon">🍱</span>
+          <div>
+            <h3 class="food-title">Кейтеринг ZUMA</h3>
+            <p class="food-desc">
+              Паназиатская кухня от ресторана ZUMA — авторские
+              блюда, приготовленные специально для нашего борта.
+            </p>
+          </div>
+        </div>
+
+        <div class="food-item reveal reveal-delay-3">
+          <span class="food-icon">👨‍🍳</span>
+          <div>
+            <h3 class="food-title">Открытая кухня</h3>
+            <p class="food-desc">
+              Полностью оборудованный камбуз с газовой плитой, духовкой
+              и профессиональным инвентарём для приготовления любых блюд.
+            </p>
+          </div>
+        </div>
+
+        <div class="food-item reveal reveal-delay-4">
+          <span class="food-icon">🥂</span>
+          <div>
+            <h3 class="food-title">Белые и игристые вина</h3>
+            <p class="food-desc">
+              Белые и игристые вина от исторических итальянских виноделен
+              с многовековым наследием — Marchesi Antinori&nbsp;(since&nbsp;1385)
+              и Tenuta Carretta&nbsp;(since&nbsp;1467). Лёгкие, минеральные,
+              созданные для моря.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Kitchen photo panel -->
+      <div class="food-photo reveal reveal-delay-2">
+        <div class="food-photo-wrap">
+          <img src="kitchen.png" alt="Кухня на борту LAGOON 500" />
+        </div>
+        <p class="food-photo-caption">Камбуз · LAGOON 500</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     BLOCK 5: SIGN-UP FORM
+     REPLACE: email in action= if needed
+============================================= -->
+<section id="signup">
+  <div class="form-wrap">
+    <p class="section-tag reveal">Присоединиться</p>
+    <h2 class="section-title reveal reveal-delay-1">Запись на мероприятие</h2>
+    <div class="section-line reveal reveal-delay-2"></div>
+    <p class="reveal reveal-delay-2" style="text-align:center; color:var(--gray); font-size:.9rem; margin-top:-.8rem; margin-bottom:.4rem;">
+      Оставьте заявку — мы свяжемся с вами в течение 24 часов
+    </p>
+    <p class="form-note reveal reveal-delay-3">Количество мест ограничено</p>
+
+    <form
+      id="contact-form"
+      action="https://formsubmit.co/silachevaevent@gmail.com"
+      method="POST"
+      class="reveal reveal-delay-2"
+    >
+      <input type="hidden" name="_subject"  value="Заявка: Yoga by Victoria Silacheva" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha"  value="false" />
+      <input type="text"   name="_honey"    class="_hp" />
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="name">Имя *</label>
+          <input type="text" id="name" name="name" placeholder="Ваше имя" required />
+        </div>
+        <div class="form-field">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" placeholder="email@example.com" required />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="phone">Телефон (по желанию)</label>
+        <input type="tel" id="phone" name="phone" placeholder="+7 (___) ___-__-__" />
+      </div>
+
+      <div class="form-field">
+        <label for="comment">Комментарий</label>
+        <textarea id="comment" name="comment" placeholder="Вопросы, пожелания, количество участников…"></textarea>
+      </div>
+
+      <div class="form-submit">
+        <button type="submit" class="btn-submit">Отправить заявку</button>
+      </div>
+
+      <div class="form-success" id="form-success">
+        ✓ &nbsp; Заявка отправлена. Мы свяжемся с вами в ближайшее время!
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Victoria Silacheva</div>
+  <p class="footer-tagline">Yoga · LAGOON 500</p>
+  <p class="footer-copy">© 2026 Yoga by Victoria Silacheva. Все права защищены.</p>
+  <p class="footer-initials">MK</p>
+</footer>
+
+<script>
+  /* Nav scroll state */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* Smooth anchor scrolling with gentle easing */
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (!target || reduceMotion) return;
+      e.preventDefault();
+      const startY = window.scrollY;
+      const endY = target.getBoundingClientRect().top + startY - 64;
+      const duration = Math.min(1200, 500 + Math.abs(endY - startY) * 0.35);
+      let start = null;
+      const step = (ts) => {
+        if (start === null) start = ts;
+        const p = Math.min((ts - start) / duration, 1);
+        window.scrollTo(0, startY + (endY - startY) * easeInOut(p));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  });
+
+  /* Scroll-reveal */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* Section lines */
+  const lineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.section-line').forEach(el => lineObserver.observe(el));
+
+  /* Form AJAX submit */
+  const form    = document.getElementById('contact-form');
+  const success = document.getElementById('form-success');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('.btn-submit');
+    btn.textContent = 'Отправляем…';
+    btn.disabled = true;
+    try {
+      const data = new FormData(form);
+      await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      form.reset();
+      success.classList.add('visible');
+    } catch (_) {}
+    btn.textContent = 'Отправить заявку';
+    btn.disabled = false;
+  });
+</script>
+
+</body>
+</html>
